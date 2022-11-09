@@ -1,6 +1,6 @@
 # Create your views here.
 from django.shortcuts import render
-from django.views.generic.edit import CreateView
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from .models import Plant
 
 # Add the following import
@@ -42,4 +42,12 @@ def plants_detail(request, plant_id):
 class PlantCreate(CreateView):
   model = Plant
   fields = '__all__'
-  success_url = '/cats/'
+  success_url = '/plants/'
+
+class PlantUpdate(UpdateView):
+  model = Plant
+  fields = ['species', 'description', 'age']
+
+class PlantDelete(DeleteView):
+  model = Plant
+  success_url = '/plants/'
