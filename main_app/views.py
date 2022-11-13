@@ -75,7 +75,7 @@ class LightCreate(CreateView):
 
 class LightUpdate(UpdateView):
   model = Light
-  fields = ['name', 'color']
+  fields = ['name', 'lumen']
 
 class LightDelete(DeleteView):
   model = Light
