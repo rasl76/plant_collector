@@ -2,6 +2,7 @@
 from django.shortcuts import render
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from .models import Plant
+from .forms import DebugForm
 
 # Add the following import
 from django.http import HttpResponse
@@ -35,7 +36,10 @@ def plants_index(request):
 
 def plants_detail(request, plant_id):
   plant = Plant.objects.get(id=plant_id)
-  return render(request, 'plants/detail.html', { 'plant': plant })
+  debug_form = DebugForm()
+  return render(request, 'plants/detail.html', { 
+    'plant': plant, 'debug_form': debug_form 
+    })
 
 # View Class
 
