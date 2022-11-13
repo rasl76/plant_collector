@@ -1,0 +1,14 @@
+{% extends 'base.html' %} {% block content %}
+
+<h1>Light List</h1>
+
+{% for light in light_list %}
+<a href="{% url 'lights_detail' light.id %}">
+  <div class="card">
+    <div class="card-content">
+      <span class="card-title">{{ light.name }}</span>
+      <p>Lumens: {{ light.lumen }}</p>
+    </div>
+  </div>
+</a>
+{% endfor %} {% endblock %}

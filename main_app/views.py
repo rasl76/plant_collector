@@ -1,26 +1,9 @@
 # Create your views here.
 from django.shortcuts import render, redirect
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
-from .models import Plant
+from django.views.generic import ListView, DetailView
+from .models import Plant, Light
 from .forms import DebugForm
-
-# Add the following import
-from django.http import HttpResponse
-
-# Add the Plant class & list and view function below the imports
-# class Plant:  # Note that parens are optional if not inheriting from another class
-#   def __init__(self, name, species, description, age):
-#     self.name = name
-#     self.species = species
-#     self.description = description
-#     self.age = age
-
-# plants = [
-#   Plant('Charles', 'Christmas Cactus', 'foul little demon', 3),
-#   Plant('William', 'Hoya', 'Still waiting to flower',4),
-#   Plant('Harry', 'Pothos', 'Can survive under harsh conditions', 4)
-# ]
-
 
 # Define the home view
 def home(request):
@@ -36,9 +19,13 @@ def plants_index(request):
 
 def plants_detail(request, plant_id):
   plant = Plant.objects.get(id=plant_id)
+    # Get the lights the plant doesn't have
+  lights_plant_doesnt_have = Light.objects.exclude(id__in = plant.lights.all().values_list('id'))
   debug_form = DebugForm()
   return render(request, 'plants/detail.html', { 
-    'plant': plant, 'debug_form': debug_form 
+    'plant': plant, 'debug_form': debug_form,
+    # Add the lights to be displayed
+    'lights': lights_plant_doesnt_have
     })
 
 # add this new function below cats_detail
@@ -53,8 +40,16 @@ def add_debug(request, plant_id):
     new_debug.plant_id = plant_id
     new_debug.save()
   return redirect('detail', plant_id=plant_id)
-# View Class
 
+def assoc_light(request, plant_id, light_id):
+  Plant.objects.get(id=plant_id).lights.add(light_id)
+  return redirect('detail', plant_id=plant_id)
+
+def unassoc_light(request, plant_id, light_id):
+  Plant.objects.get(id=plant_id).lights.remove(light_id)
+  return redirect('detail', plant_id=plant_id)
+
+# View Class
 class PlantCreate(CreateView):
   model = Plant
   fields = '__all__'
@@ -67,4 +62,23 @@ class PlantUpdate(UpdateView):
 class PlantDelete(DeleteView):
   model = Plant
   success_url = '/plants/'
+
+class LightList(ListView):
+  model = Light
+
+class LightDetail(DetailView):
+  model = Light
+
+class LightCreate(CreateView):
+  model = Light
+  fields = '__all__'
+
+class LightUpdate(UpdateView):
+  model = Light
+  fields = ['name', 'color']
+
+class LightDelete(DeleteView):
+  model = Light
+  success_url = '/lights/'
+
 
