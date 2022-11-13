@@ -1,5 +1,5 @@
 # Create your views here.
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from .models import Plant
 from .forms import DebugForm
@@ -41,6 +41,18 @@ def plants_detail(request, plant_id):
     'plant': plant, 'debug_form': debug_form 
     })
 
+# add this new function below cats_detail
+def add_debug(request, plant_id):
+  # create a ModelForm instance using the data in request.POST
+  form = DebugForm(request.POST)
+  # validate the form
+  if form.is_valid():
+    # don't save the form to the db until it
+    # has the cat_id assigned
+    new_debug = form.save(commit=False)
+    new_debug.plant_id = plant_id
+    new_debug.save()
+  return redirect('detail', plant_id=plant_id)
 # View Class
 
 class PlantCreate(CreateView):
@@ -55,3 +67,4 @@ class PlantUpdate(UpdateView):
 class PlantDelete(DeleteView):
   model = Plant
   success_url = '/plants/'
+
