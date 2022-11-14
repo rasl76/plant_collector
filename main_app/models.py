@@ -1,6 +1,7 @@
 from django.db import models
 from django.urls import reverse
-# from datetime import date
+from datetime import date
+from django.contrib.auth.models import User
 
 PESTICIDES = (
     ('F', 'Fungicide'),
@@ -26,7 +27,7 @@ class Plant(models.Model):
     age = models.IntegerField()
     # Add the M:M relationship
     lights = models.ManyToManyField(Light)
-
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
@@ -53,3 +54,5 @@ class Debug(models.Model):
   def __str__(self):
     # Nice method for obtaining the friendly value of a Field.choice
     return f"{self.get_pesticide_display()} on {self.date}"
+  class Meta:
+    ordering = ['-date']

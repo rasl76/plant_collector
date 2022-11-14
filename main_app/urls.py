@@ -17,5 +17,6 @@ urlpatterns = [
     path('lights/create/', views.LightCreate.as_view(), name='lights_create'),
     path('lights/<int:pk>/update/', views.LightUpdate.as_view(), name='lights_update'),
     path('lights/<int:pk>/delete/', views.LightDelete.as_view(), name='lights_delete'),
+    path('accounts/signup/', views.signup, name='signup'), 
 ]
 
